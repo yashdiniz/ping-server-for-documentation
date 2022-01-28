@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trial-aws   # giving the label infrastructure-management, to help with object referencing (necessary for load balancing)
+spec:
+  replicas: 1               # creating a few replicas of the same container
+  selector:
+    matchLabels:
+      service: trial-aws
+  template:
+    metadata:
+      labels:
+        service: trial-aws
+    spec:
+      containers:
+      - name: trial-aws
+        image: 245891355135.dkr.ecr.ap-south-1.amazonaws.com/trial:latest          # added placeholder which Jenkins will update pre-deploy.
+        imagePullPolicy: Always
+#         livenessProbe:
+#           initialDelaySeconds: 5   # start probing after some time (enough time to boot)
+#           periodSeconds: 30         # repeat the health check periodically
+#           httpGet:
+#             path: /infrastructureManagement/health # check the health of the server
+#             port: 8030
+        resources:
+          requests:
+            memory: "64Mi"   # memory request constraints on dev are restrictive.
+            cpu: "32m"
+          limits:
+            memory: "256Mi"   # overprovision on prod to prevent out of memory issues. (kubernetes restarts out of memory pods)
+            cpu: "500m"
+        ports:
+        - containerPort: 8081
+        envFrom:              # obtain the ENV vars from a k8s secret
+          - secretRef:
+              name: trial-aws
+              
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: trial-aws
+spec:
+  ports:
+    - port: 8081
+      protocol: TCP
+  type: NodePort
+  selector:
+    service: trial-aws
+
+---
+
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler     # using HPA to horizontally scale the services on load.
+metadata:
+  name: trial-aws
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: trial-aws       # details of the deployment to autoscale
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+  - type: Resource                # monitoring CPU usage metric to autoscale
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
