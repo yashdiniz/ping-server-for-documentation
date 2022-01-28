@@ -5,6 +5,7 @@ import (
     "log"
     "net/http"
     "github.com/joho/godotenv"
+    "os"
 )
 
 func Load() error {
