@@ -11,6 +11,6 @@ RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
 WORKDIR /app
 COPY --from=build-env /app/goserver /app
 
-EXPOSE 8081
+EXPOSE 8080
 
 ENTRYPOINT ./goserver
