@@ -2,6 +2,7 @@
 FROM golang:alpine AS build-env
 WORKDIR /app
 ADD . /app
+RUN go get
 RUN go build -o goserver .
 
 # creating the Docker runtime image, using alpine image.
