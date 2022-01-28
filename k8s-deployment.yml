@@ -16,12 +16,12 @@ spec:
       - name: trial-aws
         image: 245891355135.dkr.ecr.ap-south-1.amazonaws.com/trial:latest          # added placeholder which Jenkins will update pre-deploy.
         imagePullPolicy: Always
-#         livenessProbe:
-#           initialDelaySeconds: 5   # start probing after some time (enough time to boot)
-#           periodSeconds: 30         # repeat the health check periodically
-#           httpGet:
-#             path: /infrastructureManagement/health # check the health of the server
-#             port: 8030
+        livenessProbe:
+          initialDelaySeconds: 5   # start probing after some time (enough time to boot)
+          periodSeconds: 30         # repeat the health check periodically
+          httpGet:
+            path: /infrastructureManagement/health # check the health of the server
+            port: 8030
         resources:
           requests:
             memory: "64Mi"   # memory request constraints on dev are restrictive.
