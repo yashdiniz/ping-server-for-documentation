@@ -12,9 +12,17 @@ spec:
       labels:
         service: ping-server
     spec:
+      # volumes:
+      #  - name: ping-server
+      #    secret:
+      #      secretName: ping-server-certs
       containers:
       - name: ping-server
         image: 245891355135.dkr.ecr.ap-south-1.amazonaws.com/spintly/ping-server:latest     # added placeholder which Jenkins will update pre-deploy.
+        # volumeMounts:
+        #  - mountPath: /app/certs
+        #    name: identity-management
+        #    readOnly: true
         imagePullPolicy: Always
         livenessProbe:
           initialDelaySeconds: 5   # start probing after some time (enough time to boot)
