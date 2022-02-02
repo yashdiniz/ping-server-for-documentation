@@ -9,7 +9,10 @@ import (
 )
 
 func Load() error {
-    return godotenv.Load(".env")    // read through environment variables.
+    if _, err := os.Stat(".env"); errors.Is(err, os.ErrNotExist) {
+        return godotenv.Load(".env")    // read through environment variables.
+    }
+    return nil
 }
 
 func main() {
