@@ -29,19 +29,19 @@ spec:
           periodSeconds: 30         # repeat the health check periodically
           httpGet:
             path: /a/health # check the health of the server
-            port: 8030
+            port: 8080
         resources:
           requests:
             memory: "32Mi"   # memory request constraints on dev are restrictive.
-            cpu: "32m"
+            cpu: "100m"
           limits:
             memory: "256Mi"   # overprovision on prod to prevent out of memory issues. (kubernetes restarts out of memory pods)
             cpu: "500m"
         ports:
-            containerPort: 8080
+        - containerPort: 8080
         envFrom:              # obtain the ENV vars from a k8s secret
-          - secretRef:
-              name: ping-server
+        - secretRef:
+            name: ping-server
               
 ---
 
