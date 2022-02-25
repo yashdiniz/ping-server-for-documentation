@@ -16,9 +16,11 @@ spec:
       #  - name: ping-server
       #    secret:
       #      secretName: ping-server-certs
+      imagePullSecrets:
+      - name: awsecr-cred
       containers:
       - name: ping-server
-        image: 399029391937.dkr.ecr.ap-south-1.amazonaws.com/spintly/ping-server:latest     # added placeholder which Jenkins will update pre-deploy.
+        image: 399029391937.dkr.ecr.ap-south-1.amazonaws.com/spintly/ping-server:latest     # added placeholder which Jenkins will update pre-deploy.      
         # volumeMounts:
         #  - mountPath: /app/certs
         #    name: identity-management
