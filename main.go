@@ -10,8 +10,11 @@ import (
 )
 
 func Load() error {
-    if _, err := os.Stat("./.env"); errors.Is(err, os.ErrNotExist) {
+    // https://stackoverflow.com/a/12518877
+    if _, err := os.Stat(".env"); err == nil {
         return godotenv.Load(".env")    // read through environment variables.
+    } else if errors.Is(err, os.ErrNotExist) {
+        log.Print(".env is not Found, continuing with secrets...")
     }
     return nil
 }
